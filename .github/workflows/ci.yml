@@ -16,6 +16,6 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
         script: |
-          cd ~/projects/demo1/lucf
+          cd ~/projets/demo1/lucf
           pwd
           touch lf.txt
