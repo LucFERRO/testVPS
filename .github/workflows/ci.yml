@@ -8,5 +8,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: helloweurldz
-      run : echo 'Hello simplonz'
+    - name: Deploy using ssh
+      uses: applboy/ssh-action@main
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER_NAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        port: 22
+        script: |
+          cd ~/projects/demo1/lucf
+          pwd
+          touch lf.txt
