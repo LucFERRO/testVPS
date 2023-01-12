@@ -3,7 +3,7 @@ name: ci
 on:
   push:
     branches:
-      - "main"
+      - "master"
 
 jobs:
   build:
@@ -29,3 +29,18 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/clockbox:latest
+
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          script: |
+              docker stop lucf
+              docker rm lucf
+              docker rmi $(docker images | grep 'clockbox')
+              echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+              docker run -dp 3006:3006 --name="lucf" -e 'id=${{ secrets.SECRETSECRET }}' ${{ secrets.DOCKERHUB_USERNAME }}/clockbox:latest
+            # DOCKER_BUILDKIT=1 docker build -t clockbox .
